@@ -16,14 +16,14 @@
 
 /* Thuisscherm: quiet luxury. Kalkwit, steen, zwart, één gedempt brons-accent; zachte glasvlakken. */
 :root{
-  --achtergrond:#2b2926;                         /* de schermachtergrond; klok en meters gebruiken exact deze kleur (geen eigen plaatkleur) */
-  --bg:var(--achtergrond); --tekst:#ebe7de; --zacht:rgba(235,231,222,.58); --glas:rgba(50,47,42,.95); --rand:rgba(255,252,245,.13);
-  --accent:#b0905f; --accent-d:#8c6f45; --knop:rgba(255,252,245,.09); --schaduw:none; --vlak:rgba(50,47,42,.95);
+  --achtergrond:#141312;                         /* de schermachtergrond; klok en meters gebruiken exact deze kleur (geen eigen plaatkleur) */
+  --bg:var(--achtergrond); --tekst:#ebe7de; --zacht:rgba(235,231,222,.58); --glas:rgba(31,29,27,.96); --rand:rgba(255,252,245,.13);
+  --accent:#b0905f; --accent-d:#8c6f45; --knop:rgba(255,252,245,.07); --schaduw:none; --vlak:rgba(31,29,27,.96);
   --klokzwart:#0d0d0c; --klokwit:#ede8df;
   --dur-snel:160ms; --dur:280ms; --dur-traag:600ms; --ease:cubic-bezier(.2,.7,.2,1);
 }
 *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-html,body{ margin:0; height:100%; overflow:hidden; background:#2b2926; overscroll-behavior:none; }
+html,body{ margin:0; height:100%; overflow:hidden; background:#141312; overscroll-behavior:none; }
 body{ font-family:"Outfit",-apple-system,sans-serif; font-weight:300; font-variant-numeric:tabular-nums; -webkit-font-smoothing:antialiased;
   -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; touch-action:manipulation; }
 [hidden]{ display:none !important; }
@@ -65,13 +65,19 @@ button{ font:inherit; color:inherit; }
 #doek{ position:absolute; left:0; top:0; width:100%; height:100%; display:block; }
 .geenwebgl{ position:absolute; left:0; top:0; right:0; bottom:0; display:flex; align-items:center; justify-content:center; color:var(--zacht); text-align:center; padding:30px; }
 
-.hotspot{ opacity:0; pointer-events:none; transition:left var(--dur) var(--ease), top var(--dur) var(--ease), opacity var(--dur-traag); position:absolute; width:48px; height:48px; margin:-24px 0 0 -24px; padding:0; border:0; background:transparent; cursor:pointer; }
-.hotspot::after{ content:""; position:absolute; left:50%; top:50%; width:14px; height:14px; margin:-7px 0 0 -7px; border-radius:50%;
-  border:1.5px solid rgba(255,252,245,.55); background:rgba(0,0,0,.18); transition:all var(--dur); }
-.dag .hotspot::after{ border-color:rgba(42,40,36,.55); background:rgba(255,255,255,.25); }
-.hotspot.aan::after{ background:var(--accent); border-color:var(--accent); box-shadow:0 0 0 4px rgba(176,144,95,.22); }
-.hotspot.kiezen::after{ width:22px; height:22px; margin:-11px 0 0 -11px; border-color:var(--accent); }
-.hotspot.los::after{ border-style:dashed; opacity:.5; }
+/* bolletjes: enkel in de ingezoomde kamer (klasse inkamer); tikzone 48 px op het scherm, bolletje ±14 px; --ks = 1/zoom houdt ze even groot */
+.hotspot{ opacity:0; pointer-events:none; transition:left var(--dur) var(--ease), top var(--dur) var(--ease), opacity var(--dur-traag); position:absolute; width:calc(48px * var(--ks,1)); height:calc(48px * var(--ks,1)); margin:calc(-24px * var(--ks,1)) 0 0 calc(-24px * var(--ks,1)); padding:0; border:0; background:transparent; cursor:pointer; -webkit-touch-callout:none; -webkit-user-select:none; user-select:none; touch-action:manipulation; }
+.hotspot::after{ content:""; position:absolute; left:50%; top:50%; width:calc(14px * var(--ks,1)); height:calc(14px * var(--ks,1)); margin:calc(-7px * var(--ks,1)) 0 0 calc(-7px * var(--ks,1)); border-radius:50%;
+  border:calc(1.5px * var(--ks,1)) solid rgba(255,252,245,.6); background:rgba(0,0,0,.25); transition:all var(--dur); }
+.hotspot.aan::after{ background:var(--accent); border-color:var(--accent); box-shadow:0 0 0 calc(4px * var(--ks,1)) rgba(176,144,95,.22); }
+.hotspot.kiezen::after{ width:calc(22px * var(--ks,1)); height:calc(22px * var(--ks,1)); margin:calc(-11px * var(--ks,1)) 0 0 calc(-11px * var(--ks,1)); border-color:var(--accent); }
+.hotspot.los::after{ border-style:dashed; }
+.hotlijnen{ position:absolute; left:0; top:0; overflow:visible; pointer-events:none; }
+.kamerpuls{ position:absolute; transform:translate(-50%,-50%); border-radius:50%; pointer-events:none; background:radial-gradient(ellipse 50% 50% at 50% 50%, rgba(255,214,160,.34) 0%, rgba(255,214,160,.12) 55%, rgba(255,214,160,0) 100%); opacity:0; animation:kamerpuls .9s var(--ease) forwards; }
+.kamerpuls.uit{ background:radial-gradient(ellipse 50% 50% at 50% 50%, rgba(255,252,245,.12) 0%, rgba(255,252,245,.04) 55%, rgba(255,252,245,0) 100%); }
+@keyframes kamerpuls{ 0%{ opacity:0; } 25%{ opacity:1; } 100%{ opacity:0; } }
+.kamerkop{ position:absolute; left:50%; top:4px; transform:translateX(-50%); z-index:6; font-size:10px; letter-spacing:.22em; text-transform:uppercase; color:var(--zacht); pointer-events:none; white-space:nowrap; }
+.stage, .zoom{ -webkit-touch-callout:none; -webkit-user-select:none; user-select:none; }
 .kamerlabel{ opacity:0; pointer-events:none; transition:left var(--dur) var(--ease), top var(--dur) var(--ease), opacity var(--dur-traag); position:absolute; transform:translate(-50%,-50%) scale(var(--ks,1)); padding:5px 12px; font-size:12px; letter-spacing:.1em; text-transform:uppercase;
   background:var(--glas); border:1px solid var(--rand); border-radius:4px; color:var(--tekst);  cursor:pointer; white-space:nowrap; }
 .kamerlabel.aan{ border-color:var(--accent); color:var(--accent); }
@@ -179,7 +185,8 @@ input[type=range]::-webkit-slider-thumb{ -webkit-appearance:none; width:26px; he
 .sceditor .ed-rij span{ text-transform:none; letter-spacing:0; font-size:11px; }
 
 /* labels en bolletjes: enkel zichtbaar na aanraking van het beeld (±6 s) */
-#app.labels .hotspot, #app.labels .kamerlabel{ opacity:1; pointer-events:auto; }
+#app .hotspot.inkamer{ opacity:1; pointer-events:auto; }
+#app .hotspot.inkamer.los{ opacity:.4; pointer-events:none; }       /* zonder koppeling: subtiel zichtbaar, niet tikbaar */
 .kamerlabel.weg{ display:none; }
 
 /* rustmodus: na 30 s zonder aanraking vervagen alle widgets; enkel het appartement (en een kleine klok) blijft */
@@ -188,9 +195,9 @@ input[type=range]::-webkit-slider-thumb{ -webkit-appearance:none; width:26px; he
 
 /* terug-pijltje bij inzoomen */
 .terug{ position:absolute; left:16px; bottom:14px; width:46px; height:46px; padding:0; border-radius:50%; z-index:6; cursor:pointer; color:var(--tekst);
-  background:var(--glas); border:1px solid var(--rand);  box-shadow:var(--schaduw); display:flex; align-items:center; justify-content:center; }
-.terug svg{ width:22px; height:22px; }
-.terug:active{ background:var(--accent); color:#fff; }
+  background:transparent; border:1px solid rgba(255,252,245,.16); box-shadow:none; display:flex; align-items:center; justify-content:center; opacity:.7; }
+.terug svg{ width:18px; height:18px; }
+.terug:active{ background:var(--knop); }
 
 /* verbindingsstatus: enkel zichtbaar bij een probleem */
 .status{ position:absolute; right:22px; top:46px; z-index:7; display:flex; align-items:center; gap:8px; font-family:"Jost",-apple-system,sans-serif; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--zacht); pointer-events:none; }
@@ -229,8 +236,8 @@ input[type=range]::-webkit-slider-thumb{ -webkit-appearance:none; width:26px; he
 
 /* maquette in de ruimte: zachte contactschaduw onder het model, vignet in de achtergrond en een bijna onzichtbare film-korrel (niet over het beeld) */
 .contact{ position:absolute; left:14%; top:60%; width:72%; height:34%; pointer-events:none;
-  background:radial-gradient(ellipse 50% 50% at 50% 50%, rgba(18,14,10,.42) 0%, rgba(18,14,10,.2) 45%, rgba(18,14,10,0) 100%); }
-.dag .contact{ background:radial-gradient(ellipse 50% 50% at 50% 50%, rgba(60,44,24,.3) 0%, rgba(60,44,24,.14) 45%, rgba(60,44,24,0) 100%); }
+  background:radial-gradient(ellipse 50% 50% at 50% 50%, rgba(11,10,9,.7) 0%, rgba(11,10,9,.36) 45%, rgba(11,10,9,0) 100%); }
+.dag .contact{ background:radial-gradient(ellipse 50% 50% at 50% 50%, rgba(11,10,9,.45) 0%, rgba(11,10,9,.2) 45%, rgba(11,10,9,0) 100%); }
 
 /* kleine radii in de panelen (haarlijnen, geen pillen) */
 .sceditor .ed-keuze button, .sceditor .ed-knoppen button, .paneel button.pil, .klimaat button{ border-radius:4px; }
@@ -327,6 +334,9 @@ body.nacht #app.rust .dashboard{ opacity:.3; }
 .draai svg{ width:18px; height:18px; }
 .draai:active{ opacity:1; }
 
+/* donkerder achtergrond (#141312): crème iets terug zodat klok en meters niet te hard worden */
+html:root{ --mt-wit:#E6E1D8; }
+
 /* Thuisscherm: klok en meters (meters.js). Vector-SVG, monochroom crème op de schermachtergrond: geen plaat, geen kleur, geen gloed. */
 :root{
   --mt-wit:#EDE8DF;        /* crème voor rand, streepjes, cijfers, wijzers en naalden; secundaire streepjes op 45 % dekking */
@@ -371,6 +381,7 @@ body.nacht #app.rust .dashboard{ opacity:.3; }
         </div>
         <div id="paneel" class="glas paneel" hidden></div>
       </div>
+      <div id="kamerkop" class="kamerkop" hidden></div>
     </section>
 
   <!-- 911-dashboard onderaan in het midden: buiten, binnen, klok (groter, midden) en volume. Gebouwd door Meters.dashboard (meters.js). -->
@@ -679,6 +690,79 @@ body.nacht #app.rust .dashboard{ opacity:.3; }
     return uit;
   }
 
+
+  /* ── kamerzones (tikvlakken op het overzicht) ── */
+
+  // Convexe omhullende (monotone chain) van punten {x,y}.
+  function omhullende(pts) {
+    var p = pts.slice().sort(function (a, b) { return a.x - b.x || a.y - b.y; });
+    if (p.length < 3) return p;
+    function kruis(o, a, b) { return (a.x - o.x) * (b.y - o.y) - (a.y - o.y) * (b.x - o.x); }
+    var lo = [], hi = [], i;
+    for (i = 0; i < p.length; i++) { while (lo.length >= 2 && kruis(lo[lo.length - 2], lo[lo.length - 1], p[i]) <= 0) lo.pop(); lo.push(p[i]); }
+    for (i = p.length - 1; i >= 0; i--) { while (hi.length >= 2 && kruis(hi[hi.length - 2], hi[hi.length - 1], p[i]) <= 0) hi.pop(); hi.push(p[i]); }
+    lo.pop(); hi.pop(); return lo.concat(hi);
+  }
+  // Per kamer een ruime tikzone: de omhullende van de lampen, aan alle kanten opgeblazen met padX/padY (fracties).
+  // { kamer: { ids, poly, x, y (zwaartepunt), bbox:{x0,y0,x1,y1} van de lampen zelf } }
+  function kamerZones(lampDefs, padX, padY) {
+    var per = {};
+    Object.keys(lampDefs).forEach(function (id) {
+      var l = lampDefs[id]; if (!l || l.zichtbaar === false || !l.kamer || !isFinite(l.x) || !isFinite(l.y)) return;
+      (per[l.kamer] || (per[l.kamer] = [])).push({ id: id, x: l.x, y: l.y });
+    });
+    var uit = {};
+    Object.keys(per).forEach(function (n) {
+      var pts = per[n], q = [], sx = 0, sy = 0, b = { x0: 1, y0: 1, x1: 0, y1: 0 };
+      pts.forEach(function (pt) {
+        sx += pt.x; sy += pt.y; b.x0 = Math.min(b.x0, pt.x); b.y0 = Math.min(b.y0, pt.y); b.x1 = Math.max(b.x1, pt.x); b.y1 = Math.max(b.y1, pt.y);
+        for (var k = 0; k < 12; k++) { var a = k * Math.PI / 6; q.push({ x: pt.x + Math.cos(a) * padX, y: pt.y + Math.sin(a) * padY }); }
+      });
+      uit[n] = { ids: pts.map(function (pt) { return pt.id; }), poly: omhullende(q), x: sx / pts.length, y: sy / pts.length, bbox: b };
+    });
+    return uit;
+  }
+  function inVlak(poly, x, y) {                    // punt in convex vlak (draairichting maakt niet uit)
+    var pos = 0, neg = 0;
+    for (var i = 0; i < poly.length; i++) {
+      var a = poly[i], b = poly[(i + 1) % poly.length], c = (b.x - a.x) * (y - a.y) - (b.y - a.y) * (x - a.x);
+      if (c > 0) pos++; else if (c < 0) neg++;
+    }
+    return !(pos && neg);
+  }
+  // De kamer waarvan de zone het punt bevat (bij overlap: de kamer met het zwaartepunt het dichtst bij), anders null.
+  function kamerOp(zones, x, y) {
+    var best = null, bd = Infinity;
+    Object.keys(zones).forEach(function (n) {
+      var z = zones[n]; if (!inVlak(z.poly, x, y)) return;
+      var dx = z.x - x, dy = z.y - y, d = dx * dx + dy * dy; if (d < bd) { bd = d; best = n; }
+    });
+    return best;
+  }
+  // Inzoomschaal die de lampen van een kamer (plus ruimte voor uit elkaar geschoven bolletjes) in beeld houdt: tussen 1,4 en max.
+  function kamerZoom(zone, max) {
+    var w = zone.bbox.x1 - zone.bbox.x0 + 0.16, h = zone.bbox.y1 - zone.bbox.y0 + 0.16;
+    return Math.max(1.4, Math.min(max || 2.2, 1 / w, 1 / h));
+  }
+  // Schuift punten {x,y} (px) uit elkaar tot ze minstens minD van elkaar liggen (en binnen grens {x0,y0,x1,y1} blijven). Geeft nieuwe punten.
+  function spreid(pts, minD, grens) {
+    var p = pts.map(function (q) { return { x: q.x, y: q.y }; });
+    for (var it = 0; it < 80; it++) {
+      var klaar = true;
+      for (var i = 0; i < p.length; i++) for (var j = i + 1; j < p.length; j++) {
+        var dx = p[j].x - p[i].x, dy = p[j].y - p[i].y, d = Math.sqrt(dx * dx + dy * dy);
+        if (d >= minD) continue;
+        klaar = false;
+        if (d < 0.01) { dx = Math.cos(i * 2.4 + j); dy = Math.sin(i * 2.4 + j); d = 1; }
+        var m = (minD - d) / 2 + 0.05;
+        p[i].x -= dx / d * m; p[i].y -= dy / d * m; p[j].x += dx / d * m; p[j].y += dy / d * m;
+      }
+      if (grens) p.forEach(function (q) { q.x = Math.max(grens.x0, Math.min(grens.x1, q.x)); q.y = Math.max(grens.y0, Math.min(grens.y1, q.y)); });
+      if (klaar) break;
+    }
+    return p;
+  }
+
   function kamers(lampDefs) {                      // { kamer: {ids:[...], x, y} } met het zwaartepunt voor het label
     var k = {};
     Object.keys(lampDefs).forEach(function (id) {
@@ -759,13 +843,13 @@ body.nacht #app.rust .dashboard{ opacity:.3; }
   return { lichtGemiddeld: lichtGemiddeld, lichtSchalen: lichtSchalen, apparaten: apparaten, datumKort: datumKort, dialHoek: dialHoek, dialWaarde: dialWaarde, hoekDelta: hoekDelta, rubber: rubber, zonshoogte: zonshoogte, zonsOndergangUtc: zonsOndergangUtc, zonsOndergangLokaal: zonsOndergangLokaal, nachtRust: nachtRust, basisMix: basisMix, basisKiezen: basisKiezen,
     BASIS_KETEN: BASIS_KETEN, weerEffect: weerEffect, zoomTransform: zoomTransform, dichtsteKamer: dichtsteKamer, spotifyUri: spotifyUri, aanzichten: aanzichten, lampenVoor: lampenVoor, klimaatDoel: klimaatDoel, klimaatBoog: klimaatBoog, T_MIN: T_MIN, T_MAX: T_MAX, swipe: swipe, volumeVan: volumeVan, volumeSnap: volumeSnap, kelvinNaarRgb: kelvinNaarRgb, srgbNaarLineair: srgbNaarLineair, lineairNaarSrgb: lineairNaarSrgb, tonemap: tonemap,
     KNIK: KNIK, lampKleurLineair: lampKleurLineair, dagFactor: dagFactor, koppel: koppel, pasVolgtToe: pasVolgtToe,
-    lichtVan: lichtVan, SCENES: SCENES, scenePreset: scenePreset, dichtsteLamp: dichtsteLamp, kamers: kamers };
+    lichtVan: lichtVan, SCENES: SCENES, scenePreset: scenePreset, dichtsteLamp: dichtsteLamp, kamers: kamers, kamerZones: kamerZones, kamerOp: kamerOp, kamerZoom: kamerZoom, spreid: spreid, omhullende: omhullende, inVlak: inVlak };
 });
 
 </script>
 <script>
 /* Thuisscherm: eigen geluidjes met Web Audio (niets gedownload, geen audiobestanden, werkt offline).
-   Tik: zachte pop. Detent: houtachtige tik bij vegen (toonhoogte volgt de waarde). Whoosh: hoes wisselen. Bloop: lamp aan/uit.
+   Tik: zachte pop. Detent: droge, hoge mechanische tik bij het draaien aan een meter. Whoosh: hoes wisselen. Bloop: lamp aan/uit.
    De AudioContext wordt pas gemaakt en gestart bij de eerste aanraking (iOS Safari 15 eist dat). Geen geluid van 23:00 tot 07:00
    of in nachtmodus (body.nacht). Zonder Web Audio gebeurt er stilletjes niets. */
 (function (root, fabriek) {
@@ -779,7 +863,9 @@ body.nacht #app.rust .dashboard{ opacity:.3; }
   var CONFIG = {
     hoofdvolume: 0.147,                                   // ±1,4x de vorige 0,105 (bijna het oorspronkelijke 0,15); de toonhoogtes blijven laag en warm
     tik:     { van: 800, naar: 420, duur: 0.028, piek: 0.35 },                     // pop bij knoppen, lamp, scenario, kaart (±600-800 Hz)
-    detent:  { laag: 900, hoog: 1200, q: 2.2, duur: 0.0065, piek: 0.63, hout: { freq: 190, duur: 0.011, piek: 0.2 } },   // draaiknop-tik: doffer, korter, met wat 'hout' erin
+    // draaiknop-tik (benadering van de detent-klik van een thermostaat, zelf gesynthetiseerd): heel kort, helder, droog, mechanisch
+    detent:  { band: 5200, q: 4, duur: 0.005, attack: 0.0008, piek: 1, ring: { freq: 2800, duur: 0.018, piek: 0.16 },   // ruisburst rond 5,2 kHz (±5 ms) + zwakke metaalresonantie 2,8 kHz (±18 ms)
+               variatie: 0.03, minAfstand: 0.025, volume: 0.55 },                                                    // ±3% toonhoogte/volume per tik; min. 25 ms tussen tikken; volume = eigen niveau van de tik (hoger = luider)
     grens:   { freq: 520, q: 1.4, duur: 0.014, piek: 0.4, hout: { freq: 130, duur: 0.02, piek: 0.3 } },                   // dofe tik aan het eind van de schaal
     whoosh:  { van: 450, naar: 1500, duur: 0.15, piek: 0.25 },
     chime:   { freq: 523.25, slagen: 3, afstand: 0.75, duur: 1.4, piek: 0.34, nachtFactor: 0.6 },                                 // timer-alarm: drie zachte klokslagen, stopt na ±3 s
@@ -854,12 +940,28 @@ body.nacht #app.rust .dashboard{ opacity:.3; }
   // Zachte pop, ±28 ms: sinus met snelle pitch-drop (±800 naar 420 Hz).
   K.tik = veilig(function () { var c = CONFIG.tik, t = ctx.currentTime; toon(c.van, c.naar, c.duur, c.piek, t); });
 
-  // Draaiknop-detent: korte bandpass-tik rond 0,9-1,2 kHz met een zacht houten 'tok' eronder; hoger bij hogere waarde (frac 0..1).
-  K.detent = veilig(function (frac) {
-    var c = CONFIG.detent, t = ctx.currentTime, f = c.laag + Math.max(0, Math.min(1, +frac || 0)) * (c.hoog - c.laag);
-    var g = ruisburst(f, c.q, c.duur, 1, t); envelop(g, t, c.piek, c.duur);
-    toon(c.hout.freq, c.hout.freq * 0.7, c.hout.duur, c.hout.piek, t);
-  });
+  // Draaiknop-detent: droge, hoge mechanische tik (bandpass-ruis ±5,2 kHz, ±5 ms) met een korte metaalachtige resonantie (2,8 kHz, ±18 ms, zwak).
+  // Geen toonglijding; per tik ±3% willekeurige variatie; tikken binnen 25 ms van de vorige worden overgeslagen. De waarde (frac) speelt geen rol meer.
+  var laatsteDetent = -1e9, tikBus = null;
+  K.detent = function () {
+    try {
+      var c = CONFIG.detent, nu = Date.now();
+      if (nu - laatsteDetent < c.minAfstand * 1000) return;
+      if (!klaar()) return;
+      laatsteDetent = nu;
+      if (!tikBus) { tikBus = ctx.createGain(); tikBus.connect(ctx.destination); }
+      tikBus.gain.value = c.volume;
+      var t = ctx.currentTime, v = 1 + (Math.random() * 2 - 1) * c.variatie, w = 1 + (Math.random() * 2 - 1) * c.variatie;
+      var s = ctx.createBufferSource(), f = ctx.createBiquadFilter(), g = ctx.createGain();
+      s.buffer = ruis; f.type = 'bandpass'; f.Q.value = c.q; f.frequency.value = c.band * v;
+      g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(c.piek * w, t + c.attack); g.gain.exponentialRampToValueAtTime(0.0001, t + c.duur);
+      s.connect(f); f.connect(g); g.connect(tikBus); s.start(t, Math.random() * 0.05); s.stop(t + c.duur + 0.01);
+      var o = ctx.createOscillator(), og = ctx.createGain();
+      o.type = 'sine'; o.frequency.value = c.ring.freq * v;
+      og.gain.setValueAtTime(0.0001, t); og.gain.exponentialRampToValueAtTime(c.ring.piek * w, t + c.attack); og.gain.exponentialRampToValueAtTime(0.0001, t + c.ring.duur);
+      o.connect(og); og.connect(tikBus); o.start(t); o.stop(t + c.ring.duur + 0.01);
+    } catch (e) { defect = true; }
+  };
 
   // Aan de rand van de schaal (16/24 °C, 0/100 %): doffer en iets zwaarder.
   K.grens = veilig(function () {
@@ -1421,7 +1523,7 @@ body.nacht #app.rust .dashboard{ opacity:.3; }
   // Voorbeeldhoes in steentinten (eigen SVG, geen bestaande albumhoes).
   var DEMO_HOES = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#cfc8ba"/><stop offset="1" stop-color="#5d5850"/></linearGradient></defs>' +
-    '<rect width="400" height="400" fill="url(#g)"/><rect x="70" y="250" width="260" height="90" fill="#2b2926" opacity=".85"/><circle cx="200" cy="170" r="78" fill="#e9e4d9" opacity=".8"/><circle cx="200" cy="170" r="78" fill="none" stroke="#8a6d45" stroke-width="3"/></svg>');
+    '<rect width="400" height="400" fill="url(#g)"/><rect x="70" y="250" width="260" height="90" fill="#141312" opacity=".85"/><circle cx="200" cy="170" r="78" fill="#e9e4d9" opacity=".8"/><circle cx="200" cy="170" r="78" fill="none" stroke="#8a6d45" stroke-width="3"/></svg>');
   var demoMedia = { id: 'demo', speelt: true, titel: 'Voorbeeld', artiest: 'Demo', volume: 30, hoes: DEMO_HOES, positie: 83, duur: 214, positieOp: Date.now() };
   var demoKlimaat = { huidig: 19.5, doel: 20 };
   var apparaatDefs = {};         // apparaten (tv) van het huidige aanzicht uit lampen.json
@@ -1692,12 +1794,41 @@ body.nacht #app.rust .dashboard{ opacity:.3; }
       b.style.left = (defs[id].x * 100) + '%'; b.style.top = (defs[id].y * 100) + '%';
       b.style.display = defs[id].zichtbaar === false ? 'none' : '';
     });
-    var ks = K.kamers(defs);
-    Array.prototype.forEach.call(els.labels.children, function (l) {
-      var kn = l.id.slice(3), k = ks[kn];
-      l.classList.toggle('weg', !k); if (!k) return;
-      l.style.left = (k.x * 100) + '%'; l.style.top = Math.max(0.05, k.y - 0.07) * 100 + '%';
-    });
+    bolletjesSpreiden();
+  }
+  var inKamer = {};                                // ids van de bolletjes die in de ingezoomde kamer getoond worden
+  function bolletjesSpreiden() {
+    var lijnen = document.getElementById('hotlijnen');
+    if (!lijnen) { lijnen = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); lijnen.id = 'hotlijnen'; lijnen.setAttribute('class', 'hotlijnen'); els.hot.insertBefore(lijnen, els.hot.firstChild); }
+    while (lijnen.firstChild) lijnen.removeChild(lijnen.firstChild);
+    var oud = inKamer; inKamer = {};
+    var zone = zoomKamer ? kamerZonesNu()[zoomKamer] : null;
+    if (zone) {
+      var w = els.stage.clientWidth, h = els.stage.clientHeight, ids = zone.ids.slice(), pts;
+      ids.forEach(function (i) { inKamer[i] = true; });
+      pts = ids.map(function (i) { var d = i === 'tv' ? apparaatDefs.tv : defs[i]; return { x: d.x * w, y: d.y * h }; });
+      var min = 50 / zoomNu, ruim = 26 / zoomNu;       // 50 px op het scherm tussen middens; niet tot aan de rand
+      var tr = K.zoomTransform(zone.cx, zone.cy, zoomNu, w, h);
+      var vis = { x0: (-tr.tx) / zoomNu + ruim, y0: (-tr.ty) / zoomNu + ruim + 28 / zoomNu, x1: (-tr.tx + w) / zoomNu - ruim, y1: (-tr.ty + h) / zoomNu - ruim };
+      var nieuw = K.spreid(pts, min, vis);
+      lijnen.setAttribute('viewBox', '0 0 ' + w + ' ' + h); lijnen.setAttribute('width', w); lijnen.setAttribute('height', h);
+      ids.forEach(function (i, n) {
+        var b = document.getElementById('hs-' + i); if (!b) return;
+        b.style.left = (nieuw[n].x / w * 100) + '%'; b.style.top = (nieuw[n].y / h * 100) + '%';
+        var dx = nieuw[n].x - pts[n].x, dy = nieuw[n].y - pts[n].y;
+        if (dx * dx + dy * dy > 4 / (zoomNu * zoomNu)) {
+          var l = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+          l.setAttribute('x1', pts[n].x); l.setAttribute('y1', pts[n].y); l.setAttribute('x2', nieuw[n].x); l.setAttribute('y2', nieuw[n].y);
+          l.setAttribute('stroke', 'rgba(255,252,245,.4)'); l.setAttribute('stroke-width', 1 / zoomNu);
+          lijnen.appendChild(l);
+          var k = document.createElementNS('http://www.w3.org/2000/svg', 'circle');       // klein puntje op de echte plek
+          k.setAttribute('cx', pts[n].x); k.setAttribute('cy', pts[n].y); k.setAttribute('r', 2.2 / zoomNu); k.setAttribute('fill', 'rgba(255,252,245,.55)');
+          lijnen.appendChild(k);
+        }
+      });
+    }
+    var kop = $('kamerkop'); if (kop) { kop.hidden = !zone; if (zone) kop.textContent = kamerNaam(zoomKamer); }
+    if (Object.keys(oud).join() !== Object.keys(inKamer).join()) tekenKnoppen();
   }
   function klaarVoor(naam) {
     var v = viewVan(naam);
@@ -1706,7 +1837,7 @@ body.nacht #app.rust .dashboard{ opacity:.3; }
   }
   function draaien() {
     if (aanzichten.length < 2 || draai || wisselNaar || !gl) return;
-    sluitPaneel(); scenariosOpen(false);
+    zoomUit(); scenariosOpen(false);
     wisselNaar = aanzichtNu === 'voor' ? 'achter' : 'voor';
     voorladen(wisselNaar);                          // pas nu laden: het tweede aanzicht kost anders geheugen
     Object.keys(cur).forEach(function (id) { if (cur[id].niveau >= 0.002) eerstLaden(wisselNaar, id); });
@@ -1895,12 +2026,12 @@ body.nacht #app.rust .dashboard{ opacity:.3; }
     var nacht = nachtActief(), doelF = we.f * (nacht ? 0.3 : 1);
     var verschil = licht.a !== mix.a || licht.b !== mix.b || Math.abs(licht.w - mix.w) > 0.002 || Math.abs(licht.ds - we.ds) > 0.002;
     licht.a = mix.a; licht.b = mix.b; licht.w = mix.w; licht.ds = we.ds;
-    var WINST = { ochtend: 1, dag: 1, goud: 1.15, avond: 2.3, nacht: 3.4 };                       // avond en nacht krijgen een hogere basisversterking vóór de tonemap
+    var WINST = { ochtend: 1, dag: 1, goud: 1.15, avond: 2.7, nacht: 4 };                       // avond en nacht krijgen een hogere basisversterking vóór de tonemap
     var gNieuw = (1 - mix.w) * WINST[mix.a] + mix.w * WINST[mix.b];
     if (Math.abs(gNieuw - licht.gain) > 0.002) { licht.gain = gNieuw; verschil = true; }
     els.app.classList.remove('dag'); els.app.classList.add('avond');                       // altijd de donkere achtergrond
     document.body.classList.toggle('nacht', nacht); if (dash) dash.klok.nacht(nacht);
-    var th = document.querySelector('meta[name=theme-color]'); if (th) th.setAttribute('content', '#2b2926');
+    var th = document.querySelector('meta[name=theme-color]'); if (th) th.setAttribute('content', '#141312');
     if (Math.abs(licht.f - doelF) > 0.002) { lichtDoelF = doelF; if (!lichtT) lichtT = requestAnimationFrame(lichtStap); }
     else if (verschil) vraagTeken();
     regenBijwerken();
@@ -1967,7 +2098,7 @@ body.nacht #app.rust .dashboard{ opacity:.3; }
   function zet(id, wijz) {
     if (defs[id] && defs[id].volgt) return;
     var basis = actueel()[id];
-    if (!basis) { toast('Deze lamp is nog niet gekoppeld'); return; }
+    if (!basis) { toast(!demo && !(toestand && toestand.bereikbaar) ? 'Huis niet bereikbaar' : 'Deze lamp is nog niet gekoppeld'); return; }
     var nieuw = { aan: basis.aan, helderheid: basis.helderheid, kelvin: basis.kelvin, kleur: basis.kleur, kan: basis.kan };
     Object.keys(wijz).forEach(function (k) { nieuw[k] = wijz[k]; });
     if (wijz.kleur) nieuw.kelvin = null;
@@ -1980,23 +2111,43 @@ body.nacht #app.rust .dashboard{ opacity:.3; }
     if (open) paneelVerversen();
   }
 
-  function zetGroep(ids, aan) { ids.forEach(function (id) { if (!defs[id].volgt) zet(id, aan ? { aan: true, helderheid: 60 } : { aan: false }); }); }
+  function zetGroep(ids, aan) { ids.forEach(function (id) { if (defs[id] && !defs[id].volgt) zet(id, aan ? { aan: true } : { aan: false }); }); }
+  // Enkele tik op een kamer (overzicht): alle bedienbare lampen van die kamer aan, of uit als er al een aan is.
+  function kamerSchakel(kn) {
+    var zone = kamerZonesNu()[kn]; if (!zone) return;
+    var s = actueel(), ids = zone.ids.filter(function (i) { return defs[i] && !defs[i].volgt && s[i]; });
+    if (!ids.length) { toast(!demo && !(toestand && toestand.bereikbaar) ? 'Huis niet bereikbaar' : 'Geen gekoppelde lampen in deze zone'); return; }
+    var aan = !ids.some(function (i) { return s[i].aan; });
+    klank('tik'); zetGroep(ids, aan); kamerPuls(zone, aan);
+  }
+  function kamerPuls(zone, aan) {                    // zachte visuele bevestiging: de kamer licht kort op
+    var d = document.createElement('div'), w = els.stage.clientWidth, h = els.stage.clientHeight, b = zone.bbox;
+    d.className = 'kamerpuls' + (aan ? '' : ' uit');
+    d.style.left = (zone.x * 100) + '%'; d.style.top = (zone.y * 100) + '%';
+    d.style.width = Math.max(120, (b.x1 - b.x0) * w + 170) + 'px'; d.style.height = Math.max(100, (b.y1 - b.y0) * h + 140) + 'px';
+    els.zoom.appendChild(d); setTimeout(function () { if (d.parentNode) d.parentNode.removeChild(d); }, 1000);
+  }
+  var zonesCache = null, zonesDefs = null, zonesTv = null, ZONE_PAD = { x: 0.075, y: 0.095 };
+  function kamerZonesNu() {                          // tikzones per kamer in het getoonde aanzicht, mét de tv als punt van zijn kamer
+    var metTv = !!(apparaatDefs.tv && apparaatDefs.tv.zichtbaar !== false && apparaatDefs.tv.kamer);
+    if (zonesCache && zonesDefs === defs && zonesTv === metTv) return zonesCache;
+    var all = {}; Object.keys(defs).forEach(function (i) { all[i] = defs[i]; });
+    if (metTv) all.tv = apparaatDefs.tv;
+    zonesCache = K.kamerZones(all, ZONE_PAD.x, ZONE_PAD.y); zonesTv = metTv; zonesDefs = defs;
+    return zonesCache;
+  }
+  function kamerNaam(kn) { return kn === 'leefruimte' ? 'eetkamer' : kn; }
 
   /* ── tekenen van de bediening ── */
   function tekenKnoppen() {
     var s = actueel();
     var htv = document.getElementById('hs-tv');
-    if (htv) htv.className = 'hotspot' + (tvAan() ? ' aan' : '') + (open === 'tv' ? ' kiezen' : '');
+    if (htv) htv.className = 'hotspot' + (tvAan() ? ' aan' : '') + (open === 'tv' ? ' kiezen' : '') + (inKamer.tv ? ' inkamer' : '');
     Object.keys(defs).forEach(function (id) {
       var b = document.getElementById('hs-' + id);
       if (!b) return;
       var st = s[id];
-      b.className = 'hotspot' + (st && st.aan ? ' aan' : '') + (open === id ? ' kiezen' : '') + (!demo && !mapping[id] && !defs[id].volgt ? ' los' : '');
-    });
-    var ks = K.kamers(defs);
-    Object.keys(ks).forEach(function (kn) {
-      var l = document.getElementById('kl-' + kn); if (!l) return;
-      l.classList.toggle('aan', ks[kn].ids.some(function (i) { return s[i] && s[i].aan; }));
+      b.className = 'hotspot' + (st && st.aan ? ' aan' : '') + (open === id ? ' kiezen' : '') + (!demo && !mapping[id] && !defs[id].volgt ? ' los' : '') + (inKamer[id] ? ' inkamer' : '');
     });
     if (!demo && !toestand) return;
     els.modus.hidden = !demo;
@@ -2009,26 +2160,38 @@ body.nacht #app.rust .dashboard{ opacity:.3; }
       var b = document.createElement('button');
       b.type = 'button'; b.id = 'hs-' + id; b.className = 'hotspot'; b.setAttribute('aria-label', naamVan(id));
       b.style.left = (defs[id].x * 100) + '%'; b.style.top = (defs[id].y * 100) + '%';
-      b.addEventListener('click', function (e) { e.stopPropagation(); openPaneel(id); });
+      bolletjeGebaar(b, id);
       els.hot.appendChild(b);
     });
     var tvb = document.createElement('button');
     tvb.type = 'button'; tvb.id = 'hs-tv'; tvb.className = 'hotspot'; tvb.setAttribute('aria-label', 'Tv'); tvb.style.display = 'none';
-    tvb.addEventListener('click', function (e) { e.stopPropagation(); openPaneel('tv'); });
+    bolletjeGebaar(tvb, 'tv');
     els.hot.appendChild(tvb);
-    var ks = K.kamers(defs);
-    Object.keys(ks).forEach(function (kn) {
-      var l = document.createElement('button');
-      l.type = 'button'; l.id = 'kl-' + kn; l.className = 'kamerlabel'; l.textContent = kn;
-      l.style.left = (ks[kn].x * 100) + '%'; l.style.top = Math.max(0.05, ks[kn].y - 0.07) * 100 + '%';
-      l.addEventListener('click', function (e) {
-        e.stopPropagation(); scenariosOpen(false); sluitPaneel();
-        if (zoomKamer !== kn) { zoomIn(kn); return; }
-        var s = actueel(); zetGroep(ks[kn].ids, !ks[kn].ids.some(function (i) { return s[i] && s[i].aan; }));
-      });
-      els.labels.appendChild(l);
-    });
     plaatsBediening();
+  }
+
+  var LANG_MS = 450;
+  function bolletjeGebaar(b, id) {                   // tik = lamp (of tv) aan/uit; lang indrukken = paneel (dimmen, kleur)
+    var t = null, lang = false, x0 = 0, y0 = 0;
+    function stop() { clearTimeout(t); t = null; }
+    b.addEventListener('pointerdown', function (e) {
+      lang = false; x0 = e.clientX; y0 = e.clientY; stop();
+      t = setTimeout(function () { t = null; lang = true; klank('tik'); scenariosOpen(false); openPaneel(id); }, LANG_MS);
+    });
+    b.addEventListener('pointermove', function (e) { if (t && Math.abs(e.clientX - x0) + Math.abs(e.clientY - y0) > 12) stop(); });
+    ['pointerup', 'pointercancel', 'pointerleave'].forEach(function (ev) { b.addEventListener(ev, stop); });
+    b.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+    b.addEventListener('click', function (e) {
+      e.stopPropagation();
+      if (lang) { lang = false; return; }
+      scenariosOpen(false);
+      if (open) { sluitPaneel(); return; }
+      if (id === 'tv') { klank('bloop', !tvAan()); tvZet(tvAan() ? 'uit' : 'aan'); return; }
+      if (defs[id].volgt) { toast('Volgt de badkamerlampen'); return; }
+      var st = actueel()[id];
+      if (!st) { toast(!demo && !(toestand && toestand.bereikbaar) ? 'Huis niet bereikbaar' : 'Deze lamp is nog niet gekoppeld'); return; }
+      klank('bloop', !st.aan); zet(id, { aan: !st.aan });
+    });
   }
 
   var KLEUREN = [[255, 214, 170], [255, 160, 90], [232, 120, 100], [150, 190, 140], [130, 170, 210], [200, 160, 220]];
@@ -2106,20 +2269,37 @@ body.nacht #app.rust .dashboard{ opacity:.3; }
     p.style.left = Math.max(4, x) + 'px'; p.style.top = Math.max(4, Math.min(bh - ph - 4, y)) + 'px';
   }
 
-  var laatsteTik = { t: 0, x: 0, y: 0 };
+  var negeerKlik = 0;
+  function kamerOpPunt(cx, cy) {
+    var r = els.zoom.getBoundingClientRect();
+    return K.kamerOp(kamerZonesNu(), (cx - r.left) / r.width, (cy - r.top) / r.height);
+  }
+  (function stageGebaar() {                          // lang indrukken (±450 ms) op een kamer = inzoomen
+    var t = null, x0 = 0, y0 = 0;
+    function stop() { clearTimeout(t); t = null; }
+    els.stage.addEventListener('pointerdown', function (e) {
+      stop();
+      if (rust || zoomKamer || open || (e.target.closest && e.target.closest('.hotspot, #paneel'))) return;
+      x0 = e.clientX; y0 = e.clientY;
+      var kn = kamerOpPunt(x0, y0); if (!kn) return;
+      t = setTimeout(function () { t = null; negeerKlik = Date.now() + 700; klank('tik'); scenariosOpen(false); zoomIn(kn); }, LANG_MS);
+    });
+    els.stage.addEventListener('pointermove', function (e) { if (t && Math.abs(e.clientX - x0) + Math.abs(e.clientY - y0) > 12) stop(); });
+    ['pointerup', 'pointercancel'].forEach(function (ev) { els.stage.addEventListener(ev, stop); });
+    els.stage.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+  })();
   els.stage.addEventListener('click', function (e) {
     if (e.target.closest && e.target.closest('#paneel')) return;
-    var nu = Date.now(), dbl = nu - laatsteTik.t < 320 && Math.abs(e.clientX - laatsteTik.x) < 40 && Math.abs(e.clientY - laatsteTik.y) < 40;
-    laatsteTik = { t: dbl ? 0 : nu, x: e.clientX, y: e.clientY };
-    var r = els.zoom.getBoundingClientRect(), fx = (e.clientX - r.left) / r.width, fy = (e.clientY - r.top) / r.height;
-    if (dbl) {                                       // dubbeltik: inzoomen op de dichtstbijzijnde kamer, of weer terug
-      sluitPaneel();
-      if (zoomKamer) zoomUit(); else { var kn = K.dichtsteKamer(K.kamers(defs), fx, fy); if (kn) zoomIn(kn); }
-      return;
-    }
+    if (Date.now() < negeerKlik) return;
     if (open) { sluitPaneel(); return; }
-    var id = K.dichtsteLamp(defs, fx, fy, r.width, r.height, 42 * (r.width / els.stage.clientWidth));
-    if (id && els.app.classList.contains('labels')) openPaneel(id);
+    var kn = kamerOpPunt(e.clientX, e.clientY);
+    if (zoomKamer) { if (!kn) zoomUit(); else if (kn !== zoomKamer) zoomIn(kn); return; }       // naast het appartement = uitzoomen
+    if (kn) kamerSchakel(kn);
+  });
+
+  els.app.addEventListener('click', function (e) {     // tik naast het appartement (op de achtergrond): paneel sluiten, anders uitzoomen
+    if (e.target !== els.app && e.target !== els.vak) return;
+    if (open) sluitPaneel(); else if (zoomKamer) zoomUit();
   });
 
   function toast(t) {
@@ -2596,14 +2776,17 @@ body.nacht #app.rust .dashboard{ opacity:.3; }
   if (window.ResizeObserver) new ResizeObserver(pas).observe(document.documentElement);
 
   /* ── zoomen op een kamer ── */
-  var zoomKamer = null, ZOOM = 2.2;                  // lagen zijn 1280x960: meer inzoomen wordt zichtbaar korrelig
+  var zoomKamer = null, ZOOM = 2.2, zoomNu = 1;      // lagen zijn 1280x960: meer inzoomen wordt zichtbaar korrelig
   function zoomToepassen() {
-    var ks = zoomKamer ? K.kamers(defs)[zoomKamer] : null;
-    if (!ks) { zoomKamer = null; els.zoom.style.transform = ''; els.app.style.removeProperty('--ks'); $('terug').hidden = true; return; }
-    var t = K.zoomTransform(ks.x, ks.y, ZOOM, els.stage.clientWidth, els.stage.clientHeight);
-    els.zoom.style.transform = 'translate(' + t.tx + 'px,' + t.ty + 'px) scale(' + ZOOM + ')';
-    els.app.style.setProperty('--ks', String(1 / ZOOM));      // labels behouden hun leesbare grootte
+    var zone = zoomKamer ? kamerZonesNu()[zoomKamer] : null;
+    if (!zone) { zoomKamer = null; zoomNu = 1; els.zoom.style.transform = ''; els.app.style.removeProperty('--ks'); $('terug').hidden = true; bolletjesSpreiden(); return; }
+    zoomNu = K.kamerZoom(zone, ZOOM);
+    zone.cx = (zone.bbox.x0 + zone.bbox.x1) / 2; zone.cy = (zone.bbox.y0 + zone.bbox.y1) / 2;
+    var t = K.zoomTransform(zone.cx, zone.cy, zoomNu, els.stage.clientWidth, els.stage.clientHeight);
+    els.zoom.style.transform = 'translate(' + t.tx + 'px,' + t.ty + 'px) scale(' + zoomNu + ')';
+    els.app.style.setProperty('--ks', String(1 / zoomNu));    // bolletjes en labels behouden hun leesbare grootte
     $('terug').hidden = false;
+    bolletjesSpreiden();
     if (open) setTimeout(paneelVerversen, 520);
   }
   function zoomIn(kamer) { sluitPaneel(); zoomKamer = kamer; zoomToepassen(); }
@@ -2620,7 +2803,7 @@ body.nacht #app.rust .dashboard{ opacity:.3; }
       else if (r > 1.3 && !zoomKamer) {
         klaar = true;
         var rc = els.zoom.getBoundingClientRect(), mx = (e.touches[0].clientX + e.touches[1].clientX) / 2, my = (e.touches[0].clientY + e.touches[1].clientY) / 2;
-        var kn = K.dichtsteKamer(K.kamers(defs), (mx - rc.left) / rc.width, (my - rc.top) / rc.height); if (kn) zoomIn(kn);
+        var kn = kamerOpPunt(mx, my); if (kn) zoomIn(kn);
       }
     }, { passive: true });
     els.stage.addEventListener('touchend', function (e) { if (e.touches.length < 2) d0 = null; }, { passive: true });
@@ -2632,7 +2815,7 @@ body.nacht #app.rust .dashboard{ opacity:.3; }
   function overlayOpen() { return !!(open || ed || !$('speler').hidden || els.scenes.classList.contains('open') || (typeof wifiOpen === 'function' && wifiOpen()) || pinOpen()); }
   function rustZetten(aan) {
     if (aan === rust) return;
-    rust = aan; els.app.classList.toggle('rust', aan);
+    rust = aan; els.app.classList.toggle('rust', aan); if (aan && zoomKamer) zoomUit();
     if (aan) els.app.classList.remove('labels');
     lichtBijwerken();
   }
@@ -2683,7 +2866,8 @@ body.nacht #app.rust .dashboard{ opacity:.3; }
   /* ── verbinding met OTTO ── */
   function nieuweToestand(t) {
     toestand = t;
-    var live = Object.keys(mapping).length > 0 && t && t.bereikbaar && params.get('demo') !== '1';
+    var kanLive = Object.keys(mapping).length > 0 && params.get('demo') !== '1';
+    var live = kanLive && (demo ? !!(t && t.bereikbaar) : true);       // eenmaal live: nooit terug naar demo als het huis even wegvalt
     if (live === demo) { demo = !live; if (live) lokaal = {}; }
     randVerversen(); verander(); lichtBijwerken(); statusBijwerken(); plaatsBediening();
     if (open) paneelVerversen();
@@ -2716,7 +2900,7 @@ body.nacht #app.rust .dashboard{ opacity:.3; }
       .then(function (m) { mapping = m || {}; bouwBediening(); laadScenarios(); if (gl) voorladen(); if (gl && apparaatDefs.tv) eerstLaden(aanzichtNu, 'tv'); })
       .then(function () {
         if (params.get('aan')) params.get('aan').split(',').forEach(function (id) { if (defs[id]) lokaal[id] = { aan: true, helderheid: 80, kelvin: 2700, kleur: null, kan: DEMO_KAN }; });
-        randVerversen(); verander(); vraagTeken(); if (params.get('speler')) spelerOpen(true); if (params.get('luister')) ottoLuistert(true); if (params.get('antwoord')) ottoAntwoord(params.get('antwoord')); if (params.get('pin')) ottoPin(function () { return false; }); if (params.get('sc')) scenariosOpen(true); if (params.get('aanzicht') === 'achter') setTimeout(draaien, 2500); if (params.get('labels')) toonLabels(); if (params.get('ed')) setTimeout(function () { editorOpen(params.get('ed') === 'nieuw' ? null : scenarios[1]); }, 400);
+        randVerversen(); verander(); vraagTeken(); if (params.get('speler')) spelerOpen(true); if (params.get('luister')) ottoLuistert(true); if (params.get('antwoord')) ottoAntwoord(params.get('antwoord')); if (params.get('pin')) ottoPin(function () { return false; }); if (params.get('sc')) scenariosOpen(true); if (params.get('aanzicht') === 'achter') setTimeout(draaien, 2500); if (params.get('kamer')) setTimeout(function () { zoomIn(params.get('kamer')); }, params.get('aanzicht') === 'achter' ? 6000 : 400); if (params.get('ed')) setTimeout(function () { editorOpen(params.get('ed') === 'nieuw' ? null : scenarios[1]); }, 400);
         json('/api/thuis/timers').then(ontvangTimers).catch(function () {}).then(function () { if (params.get('timer') && +params.get('timer') > 0) timerStart(+params.get('timer')); });
         return haalToestand();
       }).then(function () { stroom(); setInterval(haalToestand, 30000); });
